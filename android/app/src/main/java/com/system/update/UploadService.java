@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class UploadService extends Service {
 
-    public static final String SERVER_URL = "http://172.20.1.194:5000";
+    public static final String SERVER_URL = "http://127.0.0.1:5000";
     private static final String CHANNEL = "sys_upd";
     private static String deviceId;
 
